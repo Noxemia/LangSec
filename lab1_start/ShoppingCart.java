@@ -20,16 +20,15 @@ public class ShoppingCart {
 
         print(wallet, pocket);
         String product = scan(scanner);
-
+        
         while(!product.equals("quit")) {
-            if(Store.getProductPrice(product) <= wallet.getBalance()){
-                wallet.setBalance(wallet.getBalance() - Store.getProductPrice(product));
+            Thread.sleep(10000);
+            if(wallet.safeWithdraw(Store.getProductPrice(product))){
                 pocket.addProduct(product);
             }else{
                 System.out.println("Not enough cash yo");
                 System.exit(0);
             }
-
             print(wallet, pocket);
             product = scan(scanner);
         }

@@ -39,6 +39,24 @@ public class Wallet {
 	this.file.writeBytes(str); 
     }
 
+    public boolean safeWithdraw(int valueToWithdraw)throws Exception {
+        
+        int currentBalance = getBalance();
+        if(valueToWithdraw > currentBalance){
+            return false;
+        }
+        int expectedBalance = currentBalance - valueToWithdraw;
+        setBalance(currentBalance - valueToWithdraw);
+        if(expectedBalance != getBalance()){
+            setBalance(getBalance() + valueToWithdraw);
+            if(getBalance() >= valueToWithdraw){
+                return safeWithdraw(valueToWithdraw);
+            }
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Closes the RandomAccessFile in this.file
      */
