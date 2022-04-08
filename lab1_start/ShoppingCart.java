@@ -27,7 +27,6 @@ public class ShoppingCart {
                 pocket.addProduct(product);
             }else{
                 System.out.println("Not enough cash yo");
-                System.exit(0);
             }
             print(wallet, pocket);
             product = scan(scanner);
