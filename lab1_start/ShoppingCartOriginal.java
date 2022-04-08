@@ -23,6 +23,7 @@ public class ShoppingCartOriginal {
 
         while(!product.equals("quit")) {
             if(Store.getProductPrice(product) <= wallet.getBalance()){
+                Thread.sleep(10000);
                 wallet.setBalance(wallet.getBalance() - Store.getProductPrice(product));
                 pocket.addProduct(product);
             }else{
