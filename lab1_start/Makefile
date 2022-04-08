@@ -1,6 +1,7 @@
 all:
 	javac backEnd/*.java
 	javac ShoppingCart.java
+	javac ShoppingCartOriginal.java
 
 resetFiles:
 	rm -f backEnd/wallet.txt
