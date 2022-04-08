@@ -2,6 +2,7 @@ package backEnd;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.channels.FileLock;
 
 public class Wallet {
     /**
@@ -40,20 +41,20 @@ public class Wallet {
     }
 
     public boolean safeWithdraw(int valueToWithdraw)throws Exception {
-        
-        int currentBalance = getBalance();
-        if(valueToWithdraw > currentBalance){
-            return false;
-        }
-        int expectedBalance = currentBalance - valueToWithdraw;
-        setBalance(currentBalance - valueToWithdraw);
-        if(expectedBalance != getBalance()){
-            setBalance(getBalance() + valueToWithdraw);
-            if(getBalance() >= valueToWithdraw){
-                return safeWithdraw(valueToWithdraw);
+        FileLock lock = null;
+        while(true){
+            lock = file.getChannel().tryLock();
+            if( lock != null){
+                break;
             }
+        }
+        if(getBalance() >= valueToWithdraw){
+            setBalance(getBalance()-valueToWithdraw);
+        }else{
+            lock.release();
             return false;
         }
+        lock.release();
         return true;
     }
 
