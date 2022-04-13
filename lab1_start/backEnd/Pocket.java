@@ -26,15 +26,23 @@ public class Pocket {
      */
     public void addProduct(String product) throws Exception {
         FileLock lock = null;
-        while(true){
-            lock = file.getChannel().tryLock();
-            if( lock != null){
-                break;
+        try {
+            while (true) {
+                lock = file.getChannel().tryLock();
+                if (lock != null) {
+                    break;
+                }
+            }
+            this.file.seek(this.file.length());
+            this.file.writeBytes(product + '\n');
+        } catch (Exception e) {
+            System.out.println("Something went wrong: ");
+            e.printStackTrace();
+        } finally {
+            if (lock != null) {
+                lock.release();
             }
         }
-        this.file.seek(this.file.length());
-        this.file.writeBytes(product+'\n');
-        lock.release();
     }
 
     /**

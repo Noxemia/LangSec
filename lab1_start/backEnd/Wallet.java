@@ -42,19 +42,27 @@ public class Wallet {
 
     public boolean safeWithdraw(int valueToWithdraw)throws Exception {
         FileLock lock = null;
-        while(true){
-            lock = file.getChannel().tryLock();
-            if( lock != null){
-                break;
+        try {
+            while (true) {
+                lock = file.getChannel().tryLock();
+                if (lock != null) {
+                    break;
+                }
+            }
+            if (getBalance() >= valueToWithdraw) {
+                setBalance(getBalance() - valueToWithdraw);
+            } else {
+                lock.release();
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Something went wrong: ");
+            e.printStackTrace();
+        } finally {
+            if (lock != null) {
+                lock.release();
             }
         }
-        if(getBalance() >= valueToWithdraw){
-            setBalance(getBalance()-valueToWithdraw);
-        }else{
-            lock.release();
-            return false;
-        }
-        lock.release();
         return true;
     }
 
