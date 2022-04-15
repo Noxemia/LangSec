@@ -43,12 +43,7 @@ public class Wallet {
     public boolean safeWithdraw(int valueToWithdraw)throws Exception {
         FileLock lock = null;
         try {
-            while (true) {
-                lock = file.getChannel().tryLock();
-                if (lock != null) {
-                    break;
-                }
-            }
+            lock = file.getChannel().lock();
             if (getBalance() >= valueToWithdraw) {
                 setBalance(getBalance() - valueToWithdraw);
             } else {
